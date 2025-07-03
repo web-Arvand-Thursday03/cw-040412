@@ -18,7 +18,7 @@ if (isset($_GET['action']) && isset($_GET['entity']) && isset($_GET['id'])) {
     if ($_GET['entity'] == 'post') {
       # del post
       $stmt = $connection->query("DELETE FROM posts WHERE id=$id");
-      header("Location:index.php");
+      header("Location:" . URL_ROOT . "/admin-panel");
     } else if ($_GET['entity'] == 'category') {
       # del cat
     } else if ($_GET['entity'] == 'comment') {
@@ -26,6 +26,10 @@ if (isset($_GET['action']) && isset($_GET['entity']) && isset($_GET['id'])) {
     }
   } else if ($_GET['action'] == "approve") {
     # تایید کامنت
+    if ($_GET['entity'] == 'comment') {
+      $stmt = $connection->query("UPDATE comments SET status=1 WHERE id=$id ");
+      header("Location:" . URL_ROOT . "/admin-panel");
+    }
   }
 }
 
@@ -66,7 +70,7 @@ if (isset($_GET['action']) && isset($_GET['entity']) && isset($_GET['id'])) {
                   <td><?= $post['author'] ?></td>
                   <td>
                     <a href="#" class="btn btn-sm btn-outline-dark">ویرایش</a>
-                    <a href="index.php?action=delete&entity=post&id=<?= $post['id'] ?>" class="btn btn-sm btn-outline-danger">حذف</a>
+                    <a href="<?= URL_ROOT ?>admin-panel/index.php?action=delete&entity=post&id=<?= $post['id'] ?>" class="btn btn-sm btn-outline-danger">حذف</a>
                   </td>
                 </tr>
               <?php endforeach ?>
@@ -98,9 +102,10 @@ if (isset($_GET['action']) && isset($_GET['entity']) && isset($_GET['id'])) {
                     <?php if ($comment['status'] == 1): ?>
                       <a href="#" class="btn btn-sm btn-outline-dark disabled">تایید شده</a>
                     <?php else: ?>
-                      <a href="index.php?action=approve&entity=comment&id=<?= $comment['id'] ?>" class="btn btn-sm btn-outline-info">در انتظار تایید</a>
+                      <a href="<?= URL_ROOT ?>admin-panel/index.php?action=approve&entity=comment&id=<?= $comment['id'] ?>"
+                        class="btn btn-sm btn-outline-info">در انتظار تایید</a>
                     <?php endif ?>
-                    <a href="index.php?action=delete&entity=comment&id=<?= $comment['id'] ?>" class="btn btn-sm btn-outline-danger">حذف</a>
+                    <a href="<?= URL_ROOT ?>admin-panel/index.php?action=delete&entity=comment&id=<?= $comment['id'] ?>" class="btn btn-sm btn-outline-danger">حذف</a>
                   </td>
                 </tr>
               <?php endforeach ?>
