@@ -7,35 +7,26 @@ include BASE_DIR . "/admin-panel/includes/layout/header.php";
 $stmt = $connection->query("SELECT * FROM categories");
 $categories = $stmt->fetchAll();
 
-$invalidtitle = "";
-$invalidBody = "";
-$invalidAuthor = "";
-$invalidImage = "";
 
 if (isset($_POST['createPost'])) {
+  // var_dump($_POST);
+  // var_dump($_FILES);
   $title = $_POST['title'];
   $author = $_POST['author'];
-  $category_id = $_POST['category_id'];
   $body = $_POST['body'];
-  // $image_name=$_FILES['name'];
-  if (empty($title)) {
-    $invalidtitle = "تکمیل فیلد عنوان الزامی است";
-  }
-  if (empty($author)) {
-    $invalidAuthor = "تکمیل فیلد نویسنده الزامی است";
-  }
-  if (empty($body)) {
-    $invalidBody = "تکمیل فیلد بدنه الزامی است";
-  }
-  if (!isset($_FILES['image_name']['name'])) {
-    $invalidImage = "تکمیل فیلد عکس الزامی است";
-  }
+  $category_id = $_POST['category_id'];
+  $image_name = time() . '_' . $_FILES['tasvir']['name'];
 
-  if (!empty($title) && !empty($author) && !empty($body) && isset($_FILES['image_name']['name'])) {
-    $stmt = $connection->query("INSERT INTO posts (title,body,category_id,author,image) 
-                                VALUES ('$title','$body','$category_id','$author','3.jpg')");
-  }
+  $tmp_image = $_FILES['tasvir']['tmp_name'];
+
+  // move_uploaded_file($tmp_image, "../../../assets/images/" . $image_name);
+  move_uploaded_file($tmp_image, BASE_DIR."/assets/images/" . $image_name);
+
+
+  $stmt = $connection->query("INSERT INTO posts (title,body,category_id,author,image) 
+                            VALUES ('$title','$body',$category_id,'$author','$image_name')");
 }
+
 
 
 ?>
@@ -57,13 +48,13 @@ if (isset($_POST['createPost'])) {
           <div class="col-12 col-sm-6 col-md-4">
             <label class="form-label">عنوان مقاله</label>
             <input type="text" class="form-control" name="title" />
-            <div class="text-danger small"><?= $invalidtitle ?></div>
+            <div class="text-danger small"></div>
           </div>
 
           <div class="col-12 col-sm-6 col-md-4">
             <label class="form-label">نویسنده مقاله</label>
             <input type="text" class="form-control" name="author" />
-            <div class="text-danger small"><?= $invalidAuthor ?></div>
+            <div class="text-danger small"></div>
           </div>
 
           <div class="col-12 col-sm-6 col-md-4">
@@ -77,8 +68,8 @@ if (isset($_POST['createPost'])) {
 
           <div class="col-12 col-sm-6 col-md-4">
             <label for="formFile" class="form-label">تصویر مقاله</label>
-            <input class="form-control" type="file" name="image_name" />
-            <div class="text-danger small"><?= $invalidImage ?></div>
+            <input class="form-control" type="file" name="tasvir" />
+            <div class="text-danger small"></div>
           </div>
 
           <div class="col-12">
@@ -87,7 +78,7 @@ if (isset($_POST['createPost'])) {
               class="form-control"
               rows="6"
               name="body"></textarea>
-            <div class="text-danger small"><?= $invalidBody ?></div>
+            <div class="text-danger small"></div>
           </div>
 
           <div class="col-12">

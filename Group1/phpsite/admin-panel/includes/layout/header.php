@@ -1,6 +1,10 @@
 <?php
-
+session_start();
 $path = $_SERVER['REQUEST_URI'];
+
+if (!isset($_SESSION['email'])) {
+  header("Location:" . ADMIN_URL_ROOT . "pages/auth/login.php?err_msg=ابتدا وارد شوید");
+}
 
 ?>
 <!DOCTYPE html>
